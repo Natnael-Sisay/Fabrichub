@@ -1,13 +1,13 @@
 "use client";
 
+import { memo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart, Star } from "lucide-react";
-import type { Product } from "@/types/product";
-import { formatPrice, formatRating } from "@/utils/format";
-import { formatCategoryLabel } from "@/utils/category";
+import type { Product } from "@/types";
+import { formatPrice, formatRating, formatCategoryLabel } from "@/utils";
 
 interface ProductCardProps {
   product: Product;
@@ -15,7 +15,7 @@ interface ProductCardProps {
   onFavoriteToggle?: (product: Product) => void;
 }
 
-export function ProductCard({
+function ProductCardComponent({
   product,
   isFavorite = false,
   onFavoriteToggle,
@@ -90,3 +90,13 @@ export function ProductCard({
     </Link>
   );
 }
+
+export const ProductCard = memo(ProductCardComponent, (prev, next) => {
+  return (
+    prev.product.id === next.product.id &&
+    prev.isFavorite === next.isFavorite &&
+    prev.product.thumbnail === next.product.thumbnail &&
+    prev.product.price === next.product.price &&
+    prev.product.rating === next.product.rating
+  );
+});

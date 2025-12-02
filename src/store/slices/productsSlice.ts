@@ -1,9 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { Product, ProductStatus } from "@/types";
+import type {
+  Product,
+  ProductStatus,
+  FetchProductsParams,
+  ApiError,
+} from "@/types";
 import { ProductStatus as ProductStatusEnum } from "@/types";
-import type { FetchProductsParams, ApiError } from "@/lib/types/api";
 import {
-  createProduct,
   deleteProduct,
   fetchProductById,
   fetchProducts,
@@ -217,8 +220,9 @@ const productsSlice = createSlice({
           }
         });
 
-        const apiProductCount = state.ids.filter((id) => !isLocalProduct(id))
-          .length;
+        const apiProductCount = state.ids.filter(
+          (id) => !isLocalProduct(id)
+        ).length;
         state.total = total || apiProductCount;
       })
       .addCase(fetchProductsList.rejected, (state, action) => {
@@ -250,17 +254,20 @@ const productsSlice = createSlice({
         };
       })
 
-      .addCase(createNewProduct.fulfilled, (state, action: PayloadAction<Product>) => {
-        const p = action.payload;
-        state.byId[p.id] = p;
-        if (!state.localIds.includes(p.id)) {
-          state.localIds.push(p.id);
+      .addCase(
+        createNewProduct.fulfilled,
+        (state, action: PayloadAction<Product>) => {
+          const p = action.payload;
+          state.byId[p.id] = p;
+          if (!state.localIds.includes(p.id)) {
+            state.localIds.push(p.id);
+          }
+          if (!state.ids.includes(p.id)) {
+            state.ids.unshift(p.id);
+          }
+          state.total += 1;
         }
-        if (!state.ids.includes(p.id)) {
-          state.ids.unshift(p.id);
-        }
-        state.total += 1;
-      })
+      )
 
       .addCase(
         updateExistingProduct.fulfilled,

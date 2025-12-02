@@ -1,3 +1,3 @@
-export * from "./product";
-export * from "../lib/types/api";
-export * from "../lib/types/filters";
+export * from "./product.types";
+export * from "./api.types";
+export * from "./filters.types";

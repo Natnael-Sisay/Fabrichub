@@ -9,9 +9,11 @@ import {
 } from "@/store/slices";
 import { selectIsFavorite } from "@/store/selectors";
 import { ProductDetail } from "@/components/pages/product";
-import { ProductFormValues } from "@/types/product";
-import { ErrorState } from "@/components/states";
-import { useProductDetails } from "@/hooks/useProductDetails";
+import { ProductFormValues } from "@/types";
+import { ErrorState, ProductDetailSkeleton } from "@/components/states";
+import { PageLayout } from "@/components/layout/page-layout";
+import { useProductDetails } from "@/hooks";
+import { getErrorMessage } from "@/utils";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 
@@ -40,8 +42,7 @@ export default function ProductDetailPage() {
       ).unwrap();
       toast.success("Product updated successfully!");
     } catch (error) {
-      const err = error as { message?: string };
-      toast.error(err?.message || "Failed to update product");
+      toast.error(getErrorMessage(error));
       throw error;
     }
   };
@@ -52,44 +53,28 @@ export default function ProductDetailPage() {
       toast.success("Product deleted successfully!");
       router.push("/");
     } catch (error) {
-      const err = error as { message?: string };
-      toast.error(err?.message || "Failed to delete product");
+      toast.error(getErrorMessage(error));
       throw error;
     }
   };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col bg-background">
-        <main className="flex-1 container mx-auto px-4 py-10">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="bg-muted rounded-lg h-96 animate-pulse" />
-              <div className="space-y-4">
-                <div className="h-8 bg-muted rounded animate-pulse" />
-                <div className="h-4 bg-muted rounded animate-pulse w-3/4" />
-                <div className="h-4 bg-muted rounded animate-pulse" />
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
+      <PageLayout maxWidth="6xl">
+        <ProductDetailSkeleton />
+      </PageLayout>
     );
   }
 
   if (isError || !product) {
     return (
-      <div className="min-h-screen flex flex-col bg-background">
-        <main className="flex-1 container mx-auto px-4 py-10">
-          <div className="max-w-6xl mx-auto">
-            <ErrorState
-              title="Product Not Found"
-              message="The product you're looking for doesn't exist or has been removed."
-              onRetry={() => router.push("/")}
-            />
-          </div>
-        </main>
-      </div>
+      <PageLayout maxWidth="6xl">
+        <ErrorState
+          title="Product Not Found"
+          message="The product you're looking for doesn't exist or has been removed."
+          onRetry={() => router.push("/")}
+        />
+      </PageLayout>
     );
   }
 

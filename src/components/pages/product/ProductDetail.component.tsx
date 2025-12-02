@@ -5,12 +5,11 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Heart, Star, Package, Tag, Edit, Trash2 } from "lucide-react";
-import ProductForm from "./ProductForm.component";
-import { ProductFormMode, ProductFormValues } from "@/types/product";
+import { ProductForm } from "./ProductForm.component";
+import { ProductFormMode, ProductFormValues } from "@/types/";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
-import { formatPrice, formatRating } from "@/utils/format";
-import { formatCategoryLabel } from "@/utils/category";
-import type { Product } from "@/types/product";
+import { formatPrice, formatRating, formatCategoryLabel } from "@/utils";
+import type { Product } from "@/types";
 
 interface ProductDetailProps {
   product: Product;
@@ -47,7 +46,7 @@ export function ProductDetail({
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <main className="flex-1 container mx-auto px-4 py-10">
+      <main className="flex-1 container mx-auto px-4 py-10 max-w-6xl">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="relative">

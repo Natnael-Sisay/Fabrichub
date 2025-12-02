@@ -4,8 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Filter } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import type { CategoryOption, SortField } from "@/lib/types/filters";
-import { formatCategoryLabel } from "@/utils/category";
+import type { CategoryOption, SortField } from "@/types";
 
 interface ProductFiltersProps {
   categories: CategoryOption[];
@@ -74,9 +73,8 @@ export function ProductFilters({
     []
   );
 
-
   return (
-    <Card className="bg-card rounded-lg p-6 sticky top-32 h-fit mt-6 border-0">
+    <Card className="bg-card rounded-lg p-6 sticky top-32 h-fit lg:mt-6 border-0">
       <div className="lg:hidden mb-4">
         <Button
           variant="outline"
@@ -95,9 +93,13 @@ export function ProductFilters({
         </Button>
       </div>
 
-      <div className={`${isFiltersOpen ? "block" : "hidden"} lg:block space-y-6`}>
+      <div
+        className={`${isFiltersOpen ? "block" : "hidden"} lg:block space-y-6`}
+      >
         <div>
-                <h3 className="font-semibold text-lg mb-3 text-foreground">Category</h3>
+          <h3 className="font-semibold text-lg mb-3 text-foreground">
+            Category
+          </h3>
           <select
             value={selectedCategory}
             onChange={(e) => onCategoryChange(e.target.value)}
@@ -149,11 +151,15 @@ export function ProductFilters({
         </div>
 
         <div>
-          <h3 className="font-semibold text-sm mb-3 text-foreground">Price Range</h3>
+          <h3 className="font-semibold text-sm mb-3 text-foreground">
+            Price Range
+          </h3>
           <div className="space-y-3">
             <div className="flex items-center gap-3">
               <div className="flex-1">
-                <label className="block text-xs text-muted-foreground mb-1.5">Min</label>
+                <label className="block text-xs text-muted-foreground mb-1.5">
+                  Min
+                </label>
                 <input
                   type="number"
                   min={MIN}
@@ -162,7 +168,9 @@ export function ProductFilters({
                   onChange={(e) => {
                     const value = Number(e.target.value);
                     if (!isNaN(value)) {
-                      handleMinChange(Math.max(MIN, Math.min(value, maxVal - 1)));
+                      handleMinChange(
+                        Math.max(MIN, Math.min(value, maxVal - 1))
+                      );
                     }
                   }}
                   className="w-full px-3 py-2 border border-border rounded-md text-sm bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-ring"
@@ -170,7 +178,9 @@ export function ProductFilters({
                 />
               </div>
               <div className="flex-1">
-                <label className="block text-xs text-muted-foreground mb-1.5">Max</label>
+                <label className="block text-xs text-muted-foreground mb-1.5">
+                  Max
+                </label>
                 <input
                   type="number"
                   min={MIN}
@@ -179,7 +189,9 @@ export function ProductFilters({
                   onChange={(e) => {
                     const value = Number(e.target.value);
                     if (!isNaN(value)) {
-                      handleMaxChange(Math.min(MAX, Math.max(value, minVal + 1)));
+                      handleMaxChange(
+                        Math.min(MAX, Math.max(value, minVal + 1))
+                      );
                     }
                   }}
                   className="w-full px-3 py-2 border border-border rounded-md text-sm bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-ring"

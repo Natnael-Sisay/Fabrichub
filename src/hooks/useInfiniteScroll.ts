@@ -11,10 +11,10 @@ interface UseInfiniteScrollOptions {
 function getCardsPerRow(): number {
   if (typeof window === "undefined") return 1;
   const width = window.innerWidth;
-  if (width >= 1280) return 5; // xl
-  if (width >= 1024) return 3; // lg
-  if (width >= 640) return 2;  // sm
-  return 1; // mobile
+  if (width >= 1280) return 5;
+  if (width >= 1024) return 3;
+  if (width >= 640) return 2;
+  return 1;
 }
 
 export function useInfiniteScroll({
@@ -47,16 +47,19 @@ export function useInfiniteScroll({
     if (!hasMore || isLoading || itemCount === 0) return;
 
     const container = containerRef?.current || document;
-    const cards = container.querySelectorAll('[data-product-card]');
-    
+    const cards = container.querySelectorAll("[data-product-card]");
+
     if (cards.length === 0) return;
 
     const totalRows = Math.ceil(itemCount / cardsPerRow);
-    if (totalRows < 2) return; // Need at least 2 rows
+    if (totalRows < 2) return;
 
     const secondToLastRowStart = (totalRows - 2) * cardsPerRow;
-    const secondToLastRowEnd = Math.min(secondToLastRowStart + cardsPerRow, itemCount);
-    
+    const secondToLastRowEnd = Math.min(
+      secondToLastRowStart + cardsPerRow,
+      itemCount
+    );
+
     const cardsToObserve: Element[] = [];
     for (let i = secondToLastRowStart; i < secondToLastRowEnd; i++) {
       if (cards[i]) cardsToObserve.push(cards[i]);
@@ -77,8 +80,14 @@ export function useInfiniteScroll({
         observerRef.current.disconnect();
       }
     };
-  }, [hasMore, isLoading, itemCount, cardsPerRow, handleObserver, containerRef]);
+  }, [
+    hasMore,
+    isLoading,
+    itemCount,
+    cardsPerRow,
+    handleObserver,
+    containerRef,
+  ]);
 
   return null;
 }
-

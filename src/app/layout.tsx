@@ -16,8 +16,31 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className="light">
+    <html lang="en" suppressHydrationWarning>
       <body className="font-sans antialiased">
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  const persisted = localStorage.getItem('persist:root');
+                  if (persisted) {
+                    const parsed = JSON.parse(persisted);
+                    const theme = parsed.theme ? JSON.parse(parsed.theme) : null;
+                    const mode = theme?.mode || 'light';
+                    if (mode === 'dark') {
+                      document.documentElement.classList.add('dark');
+                    } else {
+                      document.documentElement.classList.remove('dark');
+                    }
+                  }
+                } catch (e) {
+                  document.documentElement.classList.remove('dark');
+                }
+              })();
+            `,
+          }}
+        />
         <SessionLayout>
           <ClientProviders>
             <Navbar />

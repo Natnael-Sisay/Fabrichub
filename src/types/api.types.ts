@@ -1,4 +1,4 @@
-import { Product } from "./product";
+import type { Product } from "./product.types";
 
 export interface ProductsResponse {
   products: Product[];
@@ -19,4 +19,3 @@ export type FetchProductsParams = {
   q?: string;
   category?: string;
 };
-

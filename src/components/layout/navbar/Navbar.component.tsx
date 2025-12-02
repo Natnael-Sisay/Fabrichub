@@ -11,6 +11,7 @@ import { useAppDispatch } from "@/store/store";
 import { createNewProduct } from "@/store/slices";
 import { toast } from "sonner";
 import { signOut, useSession } from "next-auth/react";
+
 export function Navbar() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const dispatch = useAppDispatch();
@@ -63,7 +64,7 @@ export function Navbar() {
                   aria-label="Create new product"
                 >
                   <Plus className="h-4 w-4" />
-                  <span>Add product</span>
+                  <span className="hidden sm:block">Add product</span>
                 </Button>
               )}
               {!isAuthenticated ? (
@@ -75,7 +76,7 @@ export function Navbar() {
                     aria-label="Login"
                   >
                     <LogIn className="h-4 w-4" />
-                    <span>Login</span>
+                    <span className="hidden sm:block">Login</span>
                   </Button>
                 </Link>
               ) : (
@@ -87,7 +88,7 @@ export function Navbar() {
                   onClick={() => signOut()}
                 >
                   <LogOut className="h-4 w-4" />
-                  <span>Logout</span>
+                  <span className="hidden sm:block">Logout</span>
                 </Button>
               )}
             </div>

@@ -22,11 +22,10 @@ import {
   FieldLabel,
   FieldError,
 } from "@/components/ui/field";
-import { Product, ProductFormMode, ProductFormValues } from "@/types/product";
+import { Product, ProductFormMode, ProductFormValues } from "@/types";
 import { ProductSchema } from "@/schemas";
 import { fetchCategories } from "@/lib/api";
-import { z } from "zod";
-import { normalizeCategories, formatCategoryLabel } from "@/utils/category";
+import { normalizeCategories, formatCategoryLabel } from "@/utils";
 
 interface ProductFormProps {
   open: boolean;
@@ -36,7 +35,7 @@ interface ProductFormProps {
   onSubmit: (values: ProductFormValues) => Promise<void> | void;
 }
 
-const ProductForm: React.FC<ProductFormProps> = ({
+const ProductFormComponent: React.FC<ProductFormProps> = ({
   open,
   onOpenChange,
   mode,
@@ -85,7 +84,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="max-w-2xl max-h-[90vh] overflow-y-auto"
+        className="max-w-2xl max-h-[90vh] text-primary  overflow-y-auto"
         showCloseButton={false}
       >
         <DialogClose
@@ -295,4 +294,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
   );
 };
 
-export default ProductForm;
+export function ProductForm(props: ProductFormProps) {
+  return <ProductFormComponent {...props} />;
+}

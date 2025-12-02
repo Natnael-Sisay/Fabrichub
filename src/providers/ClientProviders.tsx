@@ -44,7 +44,21 @@ export default function ClientProviders({
 }) {
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+      <PersistGate
+        loading={null}
+        persistor={persistor}
+        onBeforeLift={() => {
+          const state = store.getState() as RootState;
+          const theme = selectTheme(state);
+          const root = document.documentElement;
+
+          if (theme === "dark") {
+            root.classList.add("dark");
+          } else {
+            root.classList.remove("dark");
+          }
+        }}
+      >
         <ThemeInitializer>{children}</ThemeInitializer>
       </PersistGate>
     </Provider>

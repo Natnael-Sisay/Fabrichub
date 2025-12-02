@@ -1,7 +1,9 @@
-import { CategoryOption } from "@/lib/types/filters";
+import { CategoryOption } from "@/types";
 
 export function normalizeCategory(
-  category: string | { value?: string; label?: string; slug?: string; name?: string }
+  category:
+    | string
+    | { value?: string; label?: string; slug?: string; name?: string }
 ): CategoryOption {
   if (typeof category === "string") {
     return { value: category, label: category };
@@ -20,7 +22,9 @@ export function normalizeCategory(
 }
 
 export function normalizeCategories(
-  categories: Array<string | { value?: string; label?: string; slug?: string; name?: string }>
+  categories: Array<
+    string | { value?: string; label?: string; slug?: string; name?: string }
+  >
 ): CategoryOption[] {
   return categories.map(normalizeCategory);
 }
@@ -32,4 +36,3 @@ export function formatCategoryLabel(category: string): string {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 }
-

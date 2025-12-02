@@ -1,6 +1,5 @@
 import client from "./client";
-import type { Product } from "@/types/product";
-import type { ProductsResponse, FetchProductsParams } from "@/lib/types/api";
+import type { Product, ProductsResponse, FetchProductsParams } from "@/types";
 
 export async function fetchProducts(
   params: FetchProductsParams = {}

@@ -7,7 +7,7 @@ import {
   selectProductsTotal,
   selectProductsError,
 } from "@/store/selectors";
-import type { FetchProductsParams } from "@/lib/types/api";
+import type { FetchProductsParams } from "@/types";
 
 const PAGE_LIMIT = 12;
 
