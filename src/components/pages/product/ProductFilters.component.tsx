@@ -1,18 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Filter } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import type { CategoryOption, SortField } from "@/lib/types/filters";
+import { formatCategoryLabel } from "@/utils/category";
 
 interface ProductFiltersProps {
-  categories: string[];
+  categories: CategoryOption[];
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
-  sortField: string;
-  onSortFieldChange: (field: string) => void;
+  sortField: SortField;
+  onSortFieldChange: (field: SortField) => void;
   sortOrder: "asc" | "desc";
   onSortOrderChange: (order: "asc" | "desc") => void;
+  priceMin?: number;
+  priceMax?: number;
+  onPriceRangeChange?: (min: number, max: number) => void;
+  min?: number;
+  max?: number;
 }
 
 export function ProductFilters({
@@ -23,18 +30,53 @@ export function ProductFilters({
   onSortFieldChange,
   sortOrder,
   onSortOrderChange,
+  priceMin = 0,
+  priceMax = 2000,
+  onPriceRangeChange,
+  min = 0,
+  max = 2000,
 }: ProductFiltersProps) {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
-  const sortOptions = [
-    { value: "default", label: "Default" },
-    { value: "price", label: "Price" },
-    { value: "rating", label: "Rating" },
-    { value: "title", label: "Name" },
-  ];
+  const MIN = min;
+  const MAX = max;
+
+  const [minVal, setMinVal] = useState<number>(priceMin ?? MIN);
+  const [maxVal, setMaxVal] = useState<number>(priceMax ?? MAX);
+
+  useEffect(() => {
+    setMinVal(typeof priceMin === "number" ? priceMin : MIN);
+  }, [priceMin, MIN]);
+
+  useEffect(() => {
+    setMaxVal(typeof priceMax === "number" ? priceMax : MAX);
+  }, [priceMax, MAX]);
+
+  const handleMinChange = (v: number) => {
+    const newMin = Math.min(v, maxVal - 1);
+    setMinVal(newMin);
+    onPriceRangeChange?.(newMin, maxVal);
+  };
+
+  const handleMaxChange = (v: number) => {
+    const newMax = Math.max(v, minVal + 1);
+    setMaxVal(newMax);
+    onPriceRangeChange?.(minVal, newMax);
+  };
+
+  const sortOptions = useMemo(
+    () => [
+      { value: "default", label: "Default" },
+      { value: "price", label: "Price" },
+      { value: "rating", label: "Rating" },
+      { value: "title", label: "Name" },
+    ],
+    []
+  );
+
 
   return (
-    <Card className="bg-white rounded-lg p-6 sticky top-32 h-fit mt-6">
+    <Card className="bg-card rounded-lg p-6 sticky top-32 h-fit mt-6 border-0">
       <div className="lg:hidden mb-4">
         <Button
           variant="outline"
@@ -53,26 +95,39 @@ export function ProductFilters({
         </Button>
       </div>
 
-      <div
-        className={`${isFiltersOpen ? "block" : "hidden"} lg:block space-y-6`}
-      >
+      <div className={`${isFiltersOpen ? "block" : "hidden"} lg:block space-y-6`}>
         <div>
-          <h3 className="font-semibold text-lg mb-3">Category</h3>
+                <h3 className="font-semibold text-lg mb-3 text-foreground">Category</h3>
           <select
             value={selectedCategory}
             onChange={(e) => onCategoryChange(e.target.value)}
-            className="w-full px-2 py-1.5 border border-gray-300 rounded-md text-sm bg-white focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+            className="w-full px-2 py-1.5 border border-border rounded-md text-sm bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-transparent"
           >
             <option value="all">All Categories</option>
             {categories.map((category) => (
-              <option key={category} value={category} className="capitalize">
-                {category.replace("-", " ")}
+              <option key={category.value} value={category.value}>
+                {category.label}
               </option>
             ))}
           </select>
         </div>
+
         <div>
-          <h3 className="font-semibold text-sm mb-3">Sort</h3>
+          <h3 className="font-semibold text-sm mb-3 text-foreground">Sort</h3>
+          <div className="mb-2">
+            <select
+              value={sortField}
+              onChange={(e) => onSortFieldChange(e.target.value as SortField)}
+              className="w-full px-2 py-1.5 border border-border rounded-md text-sm bg-background text-foreground"
+              aria-label="Sort by"
+            >
+              {sortOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
           <div className="flex space-x-2">
             <Button
               variant={sortOrder === "asc" ? "default" : "outline"}
@@ -80,7 +135,7 @@ export function ProductFilters({
               onClick={() => onSortOrderChange("asc")}
               className="flex-1 text-xs"
             >
-              Ascending
+              Asc
             </Button>
             <Button
               variant={sortOrder === "desc" ? "default" : "outline"}
@@ -88,25 +143,50 @@ export function ProductFilters({
               onClick={() => onSortOrderChange("desc")}
               className="flex-1 text-xs"
             >
-              Descending
+              Desc
             </Button>
           </div>
         </div>
 
         <div>
-          <h3 className="font-semibold text-sm mb-3">Price Range</h3>
-          <div className="space-y-2">
-            <div className="flex justify-between text-xs text-gray-500">
-              <span>$0</span>
-              <span>$2000</span>
+          <h3 className="font-semibold text-sm mb-3 text-foreground">Price Range</h3>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="flex-1">
+                <label className="block text-xs text-muted-foreground mb-1.5">Min</label>
+                <input
+                  type="number"
+                  min={MIN}
+                  max={MAX}
+                  value={minVal}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+                    if (!isNaN(value)) {
+                      handleMinChange(Math.max(MIN, Math.min(value, maxVal - 1)));
+                    }
+                  }}
+                  className="w-full px-3 py-2 border border-border rounded-md text-sm bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-ring"
+                  placeholder={`${MIN}`}
+                />
+              </div>
+              <div className="flex-1">
+                <label className="block text-xs text-muted-foreground mb-1.5">Max</label>
+                <input
+                  type="number"
+                  min={MIN}
+                  max={MAX}
+                  value={maxVal}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+                    if (!isNaN(value)) {
+                      handleMaxChange(Math.min(MAX, Math.max(value, minVal + 1)));
+                    }
+                  }}
+                  className="w-full px-3 py-2 border border-border rounded-md text-sm bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-ring"
+                  placeholder={`${MAX}`}
+                />
+              </div>
             </div>
-            <input
-              type="range"
-              min="0"
-              max="2000"
-              className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-            />
-            <div className="text-xs text-gray-500 text-center">$0 - $2000</div>
           </div>
         </div>
       </div>

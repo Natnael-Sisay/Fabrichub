@@ -14,4 +14,9 @@ export const selectProductsTotal = createSelector(selectProductsState, (s) => s.
 
 export const selectProductsStatus = createSelector(selectProductsState, (s) => s.status);
 
-export const selectProductById = (state: RootState, id: number) => state.products.byId[id] as Product | undefined;
+export const selectProductsError = createSelector(selectProductsState, (s) => s.error);
+
+export const selectProductById = createSelector(
+  [selectProductsById, (_state: RootState, id: number) => id],
+  (byId, id) => byId[id] as Product | undefined
+);

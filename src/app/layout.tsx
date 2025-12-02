@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import "../styles/globals.css";
-import { Navbar } from "@/components/layout";
+import { Navbar } from "@/components/layout/navbar";
+import ClientProviders from "@/providers/ClientProviders";
+import { Toaster } from "sonner";
+import { SessionLayout } from "@/components/layout/session-layout";
 
 export const metadata: Metadata = {
   title: "FabricHub - Modern eCommerce",
@@ -13,10 +16,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning className="light">
       <body className="font-sans antialiased">
-        <Navbar />
-        {children}
+        <SessionLayout>
+          <ClientProviders>
+            <Navbar />
+            {children}
+            <Toaster duration={2000} position="top-right" richColors />
+          </ClientProviders>
+        </SessionLayout>
       </body>
     </html>
   );
