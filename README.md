@@ -2,6 +2,8 @@
 
 A modern eCommerce application built with Next.js, TypeScript, and Redux Toolkit. Features product listing, search, favorites, and full CRUD operations with a clean, responsive UI.
 
+**Live Demo:** [https://fabrichub-hazel.vercel.app/](https://fabrichub-hazel.vercel.app/)
+
 ## Tech Stack
 
 - **Framework:** Next.js 16 (App Router)
