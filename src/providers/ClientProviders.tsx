@@ -10,23 +10,26 @@ function ThemeInitializer({ children }: { children: React.ReactNode }) {
   const storeInstance = useStore();
 
   useEffect(() => {
+    const root = document.documentElement;
+    let previousTheme = selectTheme(storeInstance.getState() as RootState);
+
     const updateTheme = () => {
       const state = storeInstance.getState() as RootState;
       const theme = selectTheme(state);
-      const root = document.documentElement;
 
-      if (theme === "dark") {
-        root.classList.add("dark");
-      } else {
-        root.classList.remove("dark");
+      if (theme !== previousTheme) {
+        if (theme === "dark") {
+          root.classList.add("dark");
+        } else {
+          root.classList.remove("dark");
+        }
+        previousTheme = theme;
       }
     };
 
     updateTheme();
 
-    const unsubscribe = storeInstance.subscribe(() => {
-      setTimeout(updateTheme, 0);
-    });
+    const unsubscribe = storeInstance.subscribe(updateTheme);
 
     return () => unsubscribe();
   }, [storeInstance]);

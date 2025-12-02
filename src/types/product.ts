@@ -18,6 +18,18 @@ export enum ProductFormMode {
   EDIT = "EDIT",
 }
 
+export enum ProductStatus {
+  IDLE = "idle",
+  LOADING = "loading",
+  SUCCEEDED = "succeeded",
+  FAILED = "failed",
+}
+
+export enum ProductSource {
+  API = "API",
+  LOCAL = "LOCAL",
+}
+
 export type ProductFormValues = {
   title: string;
   description?: string;

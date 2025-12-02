@@ -9,7 +9,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogClose,
 } from "@/components/ui/dialog";
+import { XIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
@@ -82,7 +84,21 @@ const ProductForm: React.FC<ProductFormProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent
+        className="max-w-2xl max-h-[90vh] overflow-y-auto"
+        showCloseButton={false}
+      >
+        <DialogClose
+          className="absolute top-4 right-4 rounded-lg opacity-70 bg-destructive/20 text-destructive hover:cursor-pointer p-1  transition-opacity hover:opacity-100 focus:outline-none focus:ring-0 disabled:pointer-events-none z-10"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onOpenChange(false);
+          }}
+        >
+          <XIcon className="size-4" />
+          <span className="sr-only">Close</span>
+        </DialogClose>
         <DialogHeader>
           <DialogTitle>
             {isEdit ? "Edit Product" : "Create Product"}
