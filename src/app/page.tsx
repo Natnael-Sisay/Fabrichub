@@ -158,6 +158,7 @@ export default function HomePage() {
                       product={product}
                       isFavorite={isProductFavorite(product.id)}
                       onFavoriteToggle={handleFavoriteToggle}
+                      priority={index < 15}
                     />
                   </div>
                 ))}

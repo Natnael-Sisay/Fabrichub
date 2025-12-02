@@ -13,12 +13,14 @@ interface ProductCardProps {
   product: Product;
   isFavorite?: boolean;
   onFavoriteToggle?: (product: Product) => void;
+  priority?: boolean;
 }
 
 function ProductCardComponent({
   product,
   isFavorite = false,
   onFavoriteToggle,
+  priority = false,
 }: ProductCardProps) {
   const { id, title, price, rating, category, thumbnail } = product;
 
@@ -33,6 +35,7 @@ function ProductCardComponent({
               width={240}
               height={144}
               className="object-cover w-full h-full"
+              priority={priority}
             />
           ) : (
             <div className="w-full h-full bg-muted" />
